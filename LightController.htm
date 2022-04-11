@@ -1,0 +1,47 @@
+<html>
+<head>
+	<!-- Needed to use the API -->
+    <script src="https://cdn.jsdelivr.net/npm/particle-api-js@8/dist/particle.min.js"></script>
+
+    <script>
+        var particle = new Particle();
+
+        //This is not considered secure if exposed to the web, local use is fine
+        const accessToken = '1eae8755bac11dcea2cddbc2dca6344da5937c1c';
+        const deviceId = 'BlueNugget';
+
+        function ledControl(cmd) {
+            // Gets the status to nothing
+            document.getElementById("statusSpan").innerHTML = '';
+			// Used to switch between leds using Particle.function "ledFunction"
+            particle.callFunction({deviceId, name:'ledFunction', argument: cmd, auth:accessToken}).then(
+                function(data) {
+						//reports to user if command worked correctly.
+                    document.getElementById("statusSpan").innerHTML = 'Call completed';
+                },
+                function(err) {
+					//reports to user if command failed and supplys them with the error
+                    document.getElementById("statusSpan").innerHTML = 'Error calling device: ' + err;
+                }
+            );
+        }
+    </script>
+</head>
+<body>
+    <div id="mainDiv">
+        <h3>Traffic Light Controller</h3>
+            <p>
+			<!-- the three buttons send the commands ,"red", "yellow","green", through the API to to device -->
+			<button id="ledOnButton" onclick="ledControl('red')">RED</button>&nbsp;
+			<button id="ledOffButton" onclick="ledControl('yellow')">YELLOW</button>&nbsp;
+			<button id="ledOffButton" onclick="ledControl('green')">GREEN</button>
+			</p>
+			<p>
+			&nbsp;
+			</p>
+			<!-- Displays status of sent command -->
+            <p><span id="statusSpan"></span></p>
+    </div>
+</body>
+
+</html>
